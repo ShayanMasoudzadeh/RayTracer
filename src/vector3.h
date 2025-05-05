@@ -33,6 +33,10 @@ class vector3 {
         return std::sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
     }
 
+    double length_squared() const {
+        return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
+    }
+    
     vector3 normalize() const {
         double len = length();
         return vector3(e[0] / len, e[1] / len, e[2] / len);
