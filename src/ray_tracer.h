@@ -10,6 +10,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 #include "vector3.h"
+#include "interval.h"
 #include "color.h"
 #include "ray.h"
 

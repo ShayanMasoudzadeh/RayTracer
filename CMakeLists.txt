@@ -21,6 +21,7 @@ set(SOURCES
     src/hittable_list.h
     src/sphere.h
     src/color.h
+    src/interval.h
 )
 
 # Create the executable

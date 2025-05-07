@@ -7,7 +7,7 @@
 
 color ray_color(const ray& r, const hittable& scene) {
     hit_record rec;
-    if (scene.hit(r, 0, infinity, rec)) {
+    if (scene.hit(r, interval(0, infinity), rec)) {
         return 0.5 * (rec.normal + color(1,1,1));
     }
 
