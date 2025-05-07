@@ -1,8 +1,6 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
-#include <cmath>
-#include <iostream>
 
 class vector3 {
     public:
