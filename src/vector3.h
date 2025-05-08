@@ -34,6 +34,14 @@ class vector3 {
     double length_squared() const {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
+
+    static vector3 random() {
+        return vector3(random_double(), random_double(), random_double());
+    }
+
+    static vector3 random(double min, double max) {
+        return vector3(random_double(min,max), random_double(min,max), random_double(min,max));
+    }
     
     vector3 normalize() const {
         double len = length();
@@ -74,6 +82,23 @@ inline vector3 cross(const vector3& v, const vector3& u) {
         v.e[2]*u.e[0] - v.e[0]*u.e[2],
         v.e[0]*u.e[1] - v.e[1]*u.e[0]
     );
+}
+
+inline vector3 random_unit_vector() {
+    while (true) {
+        auto p = vector3::random(-1,1);
+        auto lensq = p.length_squared();
+        if (1e-160 < lensq && lensq <= 1)
+            return p / sqrt(lensq);
+    }
+}
+
+inline vector3 random_on_hemisphere(const vector3& normal) {
+    vector3 on_unit_sphere = random_unit_vector();
+    if (dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+        return on_unit_sphere;
+    else
+        return -on_unit_sphere;
 }
 
 #endif
