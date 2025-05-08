@@ -14,14 +14,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # List your source files
 set(SOURCES
     src/main.cpp
-    src/ray_tracer.h
-    src/vector3.h
-    src/ray.h
+    src/camera.h
+    src/color.h
     src/hittable.h
     src/hittable_list.h
-    src/sphere.h
-    src/color.h
     src/interval.h
+    src/ray.h
+    src/ray_tracer.h
+    src/sphere.h
+    src/vector3.h
 )
 
 # Create the executable
