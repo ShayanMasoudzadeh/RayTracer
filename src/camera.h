@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "hittable.h"
+#include "material.h"
 
 class camera {
   public:
@@ -16,7 +17,7 @@ class camera {
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; j++) {
-            std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush; 
+            std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++) {
                 color pixel_color(0,0,0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
@@ -86,9 +87,11 @@ class camera {
 
         hit_record rec;
         if (scene.hit(r, interval(0.001, infinity), rec)) {
-            // vector3 direction = random_on_hemisphere(rec.normal);    //uniform diffuse reflection
-            vector3 direction = rec.normal + random_unit_vector();      //Lambertian diffuse reflection
-            return 0.5 * ray_color(ray(rec.p, direction), depth-1, scene);
+            ray scattered;
+            color attenuation;
+            if (rec.mat->scatter(r, rec, attenuation, scattered))
+                return attenuation * ray_color(scattered, depth-1, scene);
+            return color(0,0,0);
         }
 
         //background color

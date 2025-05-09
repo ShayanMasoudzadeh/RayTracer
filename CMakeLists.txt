@@ -23,6 +23,7 @@ set(SOURCES
     src/ray_tracer.h
     src/sphere.h
     src/vector3.h
+    src/material.h
 )
 
 # Create the executable

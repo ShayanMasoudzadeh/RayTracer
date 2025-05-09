@@ -35,6 +35,12 @@ class vector3 {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
 
+    bool near_zero() const {
+        // Return true if the vector is close to zero in all dimensions.
+        auto s = 1e-8;
+        return (std::fabs(e[0]) < s) && (std::fabs(e[1]) < s) && (std::fabs(e[2]) < s);
+    }
+
     static vector3 random() {
         return vector3(random_double(), random_double(), random_double());
     }
@@ -99,6 +105,10 @@ inline vector3 random_on_hemisphere(const vector3& normal) {
         return on_unit_sphere;
     else
         return -on_unit_sphere;
+}
+
+inline vector3 reflect(const vector3& v, const vector3& n) {
+    return v - 2*dot(v,n)*n;
 }
 
 #endif
