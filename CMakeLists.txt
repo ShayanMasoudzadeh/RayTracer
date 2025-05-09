@@ -24,6 +24,7 @@ set(SOURCES
     src/sphere.h
     src/vector3.h
     src/material.h
+    src/input.h
 )
 
 # Create the executable
