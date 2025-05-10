@@ -11,6 +11,11 @@ class camera {
     int samples_per_pixel = 10;     // Count of random samples for each pixel
     int max_depth = 10;             // Maximum number of ray bounces into scene
 
+    double vfov = 90;                   // Vertical view angle (field of view)
+    vector3 lookfrom = vector3(0,0,0);  // Point camera is looking from
+    vector3 lookat = vector3(0,0,-1);   // Point camera is looking at
+    vector3 vup = vector3(0,1,0);       // Camera-relative "up" direction
+
     void render(const hittable& scene) {
         initialize();
 
@@ -37,6 +42,7 @@ class camera {
     vector3 pixel00_loc;        // Location of pixel 0, 0
     vector3 pixel_delta_u;      // Offset to pixel to the right
     vector3 pixel_delta_v;      // Offset to pixel below
+    vector3   u, v, w;              // Camera frame basis vectors
 
 
     void initialize() {
@@ -45,20 +51,26 @@ class camera {
         
         pixel_samples_scale = 1.0 / samples_per_pixel;
 
-        center = vector3(0, 0, 0);
+        center = lookfrom;
         
         //Determine viewport dimensions.
         double focal_length = 1.0;
-        double viewport_height = 2.0;
+        auto theta = degrees_to_radians(vfov);
+        auto h = std::tan(theta/2);
+        auto viewport_height = 2 * h * focal_length;
         double viewport_width = viewport_height * (double(image_width)/image_height);
+        // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+        w = (lookfrom - lookat).normalize();
+        u = (cross(vup, w)).normalize();
+        v = cross(w, u);
         //viewport edges
-        vector3 viewport_u = vector3(viewport_width, 0, 0);
-        vector3 viewport_v = vector3(0, -viewport_height, 0);
+        vector3 viewport_u = viewport_width * u;
+        vector3 viewport_v = viewport_height * -v;
         //pixel to pixel distance
         pixel_delta_u = viewport_u / image_width;
         pixel_delta_v = viewport_v / image_height;
         //viewport top left pixel
-        vector3 viewport_upper_left = center - vector3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
+        vector3 viewport_upper_left = center - (focal_length * w) - viewport_u/2 - viewport_v/2;
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     }
 

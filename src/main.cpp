@@ -28,6 +28,10 @@ int main() {
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 10;
+    cam.vfov = 40;
+    cam.lookfrom = vector3(-2,2,1);
+    cam.lookat   = vector3(0,0,-1);
+    cam.vup      = vector3(0,1,0);
 
     cam.render(scene);
 }
