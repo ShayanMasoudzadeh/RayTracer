@@ -14,6 +14,9 @@ class vector3 {
     double z() const {return e[2];}
 
     vector3 operator -() const {return vector3(-e[0], -e[1], -e[2]);}
+    double operator[](int i) const { return e[i]; }
+    double& operator[](int i) { return e[i]; }
+    
     vector3& operator+= (const vector3& v){
         e[0] += v.e[0];
         e[1] += v.e[1];
