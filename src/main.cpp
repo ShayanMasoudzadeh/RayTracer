@@ -83,5 +83,5 @@ int main() {
     cam.lookat   = vector3(0,0,0);
     cam.vup      = vector3(0,1,0);
 
-    cam.render(scene);
+    cam.render_parallel(scene);
 }

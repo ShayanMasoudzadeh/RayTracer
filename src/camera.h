@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <thread>
+
 #include "hittable.h"
 #include "material.h"
 
@@ -33,6 +35,45 @@ class camera {
             }
         }
         std::clog << "\rDone!                       \n";
+    }
+
+    void render_parallel(const hittable& scene){
+        initialize();
+
+        std::vector<std::thread> threads;
+        int thread_count = std::thread::hardware_concurrency();
+        int rows_per_thread = image_height / thread_count;
+
+        std::vector<std::vector<color>> framebuffer(image_height, std::vector<color>(image_width));
+
+        for (int t = 0; t < thread_count; t++) {
+            int row_start = t * rows_per_thread;
+            int row_end = (t == thread_count - 1) ? image_height : row_start + rows_per_thread;
+
+            threads.emplace_back(&camera::render_rows, this, row_start, row_end, std::ref(scene), std::ref(framebuffer));
+        }
+
+        for (auto& thread : threads) thread.join();
+
+        // Output image (in main thread only!)
+        std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+        for (int j = 0; j < image_height; j++) {
+            for (int i = 0; i < image_width; i++) {
+                write_color(std::cout, framebuffer[j][i] * pixel_samples_scale);
+            }
+        }
+    }
+    void render_rows(int start_row, int end_row, const hittable& scene, std::vector<std::vector<color>>& framebuffer){
+        for (int j = start_row; j < end_row; j++) {
+            for (int i = 0; i < image_width; i++) {
+                color pixel_color(0, 0, 0);
+                for (int sample = 0; sample < samples_per_pixel; sample++) {
+                    ray r = get_ray(i, j);
+                    pixel_color += ray_color(r, max_depth, scene);
+                }
+                framebuffer[j][i] = pixel_color;
+            }
+        }
     }
 
   private:    
