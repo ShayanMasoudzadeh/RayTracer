@@ -7,8 +7,11 @@
 #include "material.h"
 #include "sphere.h"
 #include "input.h"
+#include "log.h"
 
 int main() {
+    Logger logger;
+
     hittable_list scene;
 
     // auto material_ground = make_shared<lambertian>(color(0.1, 0.2, 0.5));
@@ -83,5 +86,9 @@ int main() {
     cam.lookat   = vector3(0,0,0);
     cam.vup      = vector3(0,1,0);
 
+    logger.log("Rendering started.");
+
     cam.render(scene);
+
+    logger.log("Rendering finished.");
 }
