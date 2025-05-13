@@ -36,8 +36,8 @@ class tri : public hittable {
         // Determine if the hit point lies within the planar shape using its plane coordinates.
         auto intersection = r.at(t);
         vector3 planar_hitpt_vector = intersection - v0;
-        auto alpha = dot(w, cross(planar_hitpt_vector, v2));
-        auto beta = dot(w, cross(v1, planar_hitpt_vector));
+        auto alpha = dot(w, cross(planar_hitpt_vector, v2-v0));
+        auto beta = dot(w, cross(v1-v0, planar_hitpt_vector));
         if ((alpha < 0) || (beta < 0) || (alpha + beta > 1)) return false;
 
         // Ray hits the 2D shape; set the rest of the hit record and return true.

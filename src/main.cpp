@@ -123,10 +123,15 @@ void tris() {
     auto lower_teal   = make_shared<lambertian>(color(0.2, 0.8, 0.8));
 
     scene.add(make_shared<tri>(vector3(-3,-2, 5), vector3(-3, -2, 1), vector3(-3, 2, 5), left_red));
+    scene.add(make_shared<tri>(vector3(-3,2, 1), vector3(-3, -2, 1), vector3(-3, 2, 5), left_red));
     scene.add(make_shared<tri>(vector3(-2,-2, 0), vector3(2, -2, 0), vector3(-2, 2, 0), back_green));
+    scene.add(make_shared<tri>(vector3(2,2, 0), vector3(2, -2, 0), vector3(-2, 2, 0), back_green));
     scene.add(make_shared<tri>(vector3(3,-2, 1), vector3(3,-2, 5), vector3(3, 2, 1), right_blue));
+    scene.add(make_shared<tri>(vector3(3,2, 5), vector3(3,-2, 5), vector3(3, 2, 1), right_blue));
     scene.add(make_shared<tri>(vector3(-2, 3, 1), vector3(2, 3, 1), vector3(-2, 3, 5), upper_orange));
+    scene.add(make_shared<tri>(vector3(2, 3, 5), vector3(2, 3, 1), vector3(-2, 3, 5), upper_orange));
     scene.add(make_shared<tri>(vector3(-2,-3, 5), vector3(2,-3, 5), vector3(-2,-3, 1), lower_teal));
+    scene.add(make_shared<tri>(vector3(2,-3, 1), vector3(2,-3, 5), vector3(-2,-3, 1), lower_teal));
 
     camera cam;
 
