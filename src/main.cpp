@@ -6,38 +6,12 @@
 #include "hittable_list.h"
 #include "material.h"
 #include "sphere.h"
+#include "tri.h"
 #include "input.h"
 #include "log.h"
 
-int main() {
-    Logger logger;
-
+void many_spheres() {
     hittable_list scene;
-
-    // auto material_ground = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    // auto material_center = make_shared<lambertian>(color(0.5, 0.1, 0.1));
-    // auto material_left   = make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);
-    // auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2), 1.0);
-
-    // scene.add(make_shared<sphere>(vector3( 0.0, -100.5, -1.0), 100.0, material_ground));
-    // scene.add(make_shared<sphere>(vector3( 0.0,    0.0, -1.2),   0.5, material_center));
-    // scene.add(make_shared<sphere>(vector3(-1.0,    0.0, -1.0),   0.5, material_left));
-    // scene.add(make_shared<sphere>(vector3( 1.0,    0.0, -1.0),   0.5, material_right));
-
-    // scene = load_scene_from_file("scene.txt");
-
-    // camera cam;
-
-    // cam.aspect_ratio = 16.0 / 9.0;
-    // cam.image_width = 400;
-    // cam.samples_per_pixel = 100;
-    // cam.max_depth = 10;
-    // cam.vfov = 40;
-    // cam.lookfrom = vector3(-2,2,1);
-    // cam.lookat   = vector3(0,0,-1);
-    // cam.vup      = vector3(0,1,0);
-
-    // cam.render(scene);
 
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     scene.add(make_shared<sphere>(vector3(0,-1000,0), 1000, ground_material));
@@ -86,9 +60,98 @@ int main() {
     cam.lookat   = vector3(0,0,0);
     cam.vup      = vector3(0,1,0);
 
-    logger.log("Rendering started.");
+    cam.render(scene);
+}
+
+void three_spheres() {
+    hittable_list scene;
+
+    auto material_ground = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+    auto material_center = make_shared<lambertian>(color(0.5, 0.1, 0.1));
+    auto material_left   = make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);
+    auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2), 1.0);
+
+    scene.add(make_shared<sphere>(vector3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    scene.add(make_shared<sphere>(vector3( 0.0,    0.0, -1.2),   0.5, material_center));
+    scene.add(make_shared<sphere>(vector3(-1.0,    0.0, -1.0),   0.5, material_left));
+    scene.add(make_shared<sphere>(vector3( 1.0,    0.0, -1.0),   0.5, material_right));
+
+    //scene = hittable_list(make_shared<bvh_node>(scene));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 10;
+    cam.vfov = 90;
+    cam.lookfrom = vector3(0, 0, 0);
+    cam.lookat   = vector3(0, 0, -1);
+    cam.vup      = vector3(0, 1, 0);
 
     cam.render(scene);
+}
 
+void load_file() {
+    hittable_list scene;
+
+    scene = load_scene_from_file("scene.txt");
+
+    scene = hittable_list(make_shared<bvh_node>(scene));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 10;
+    cam.vfov = 40;
+    cam.lookfrom = vector3(-2,2,1);
+    cam.lookat   = vector3(0,0,-1);
+    cam.vup      = vector3(0,1,0);
+
+    cam.render(scene);
+}
+
+void tris() {
+    hittable_list scene;
+
+    auto left_red     = make_shared<lambertian>(color(1.0, 0.2, 0.2));
+    auto back_green   = make_shared<lambertian>(color(0.2, 1.0, 0.2));
+    auto right_blue   = make_shared<lambertian>(color(0.2, 0.2, 1.0));
+    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
+    auto lower_teal   = make_shared<lambertian>(color(0.2, 0.8, 0.8));
+
+    scene.add(make_shared<tri>(vector3(-3,-2, 5), vector3(-3, -2, 1), vector3(-3, 2, 5), left_red));
+    scene.add(make_shared<tri>(vector3(-2,-2, 0), vector3(2, -2, 0), vector3(-2, 2, 0), back_green));
+    scene.add(make_shared<tri>(vector3(3,-2, 1), vector3(3,-2, 5), vector3(3, 2, 1), right_blue));
+    scene.add(make_shared<tri>(vector3(-2, 3, 1), vector3(2, 3, 1), vector3(-2, 3, 5), upper_orange));
+    scene.add(make_shared<tri>(vector3(-2,-3, 5), vector3(2,-3, 5), vector3(-2,-3, 1), lower_teal));
+
+    camera cam;
+
+    cam.aspect_ratio      = 1.0;
+    cam.image_width       = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth         = 50;
+
+    cam.vfov     = 80;
+    cam.lookfrom = vector3(0,0,9);
+    cam.lookat   = vector3(0,0,0);
+    cam.vup      = vector3(0,1,0);
+
+    cam.render(scene);
+}
+
+int main() {
+    Logger logger;
+
+    logger.log("Rendering started.");
+    switch (4) {
+        case 1:  many_spheres();   break;
+        case 2:  three_spheres();  break;
+        case 3:  load_file();              break;
+        case 4:  tris();     break;
+    }
     logger.log("Rendering finished.");
 }
