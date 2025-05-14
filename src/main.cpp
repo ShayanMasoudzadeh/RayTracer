@@ -174,17 +174,58 @@ void load_obj() {
     cam.render(scene);
 }
 
+void custom_scene() {
+    hittable_list scene;
+
+    auto black = make_shared<lambertian>(color(0, 0, 0));
+    auto black_glass = make_shared<metal>(color(0.5, 0.1, 0.1), 0.0);
+    auto body_silver = make_shared<metal>(color(0.5, 0.5, 0.5), 0.25);
+    auto glass = make_shared<metal>(color(0.3, 0.3, 0.3), 0.0);
+    auto gray_rims = make_shared<metal>(color(0.05, 0.05, 0.05), 0.5);
+    auto light_light_orange = make_shared<lambertian>(color(1.0, 0.144, 0.0));
+    auto light_orange = make_shared<lambertian>(color(1.0, 0.06, 0.0));
+    auto light_white = make_shared<lambertian>(color(1.0, 1.0, 1.0));
+    auto panel_dark = make_shared<metal>(color(0.6, 0.6, 0.6), 0.5);
+    auto panel_light = make_shared<metal>(color(0.8, 0.8, 0.8), 0.5);
+
+    load_obj_file("obj/tesla_black.obj", scene, black);
+    load_obj_file("obj/tesla_black_glass.obj", scene, black_glass);
+    load_obj_file("obj/tesla_body_silver.obj", scene, body_silver);
+    load_obj_file("obj/tesla_glass.obj", scene, glass);
+    load_obj_file("obj/tesla_gray_rims.obj", scene, gray_rims);
+    load_obj_file("obj/tesla_light_light_orange.obj", scene, light_light_orange);
+    load_obj_file("obj/tesla_light_orange.obj", scene, light_orange);
+    load_obj_file("obj/tesla_light_white.obj", scene, light_white);
+    load_obj_file("obj/tesla_panel_dark.obj", scene, panel_dark);
+    load_obj_file("obj/tesla_panel_light.obj", scene, panel_light);
+
+    scene = hittable_list(make_shared<bvh_node>(scene));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 10;
+    cam.vfov = 40;
+    cam.lookfrom = vector3(-10,4.5,5.75);
+    cam.lookat   = vector3(0,0,0);
+    cam.vup      = vector3(0,1,0);
+
+    cam.render(scene);
+}
 
 int main() {
     Logger logger;
 
     logger.log("Rendering started.");
-    switch (5) {
+    switch (6) {
         case 1:  many_spheres();   break;
         case 2:  three_spheres();  break;
         case 3:  load_file();              break;
         case 4:  tris();     break;
         case 5:  load_obj();     break;
+        case 6: custom_scene(); break;
     }
     logger.log("Rendering finished.");
 }
