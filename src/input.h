@@ -1,11 +1,13 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "ray_tracer.h"
 #include "hittable_list.h"
 #include "material.h"
 #include "sphere.h"
+#include "tri.h"
 
 hittable_list load_scene_from_file(const std::string& filename) {
     hittable_list scene;
@@ -46,4 +48,38 @@ hittable_list load_scene_from_file(const std::string& filename) {
     }
 
     return scene;
+}
+
+void load_obj_file(const std::string& filename, hittable_list& scene, shared_ptr<material> mat) {
+    std::ifstream file(filename);
+    if (!file) {
+        std::cerr << "Failed to open OBJ file: " << filename << "\n";
+        return;
+    }
+
+    std::vector<vector3> vertices;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string token;
+        iss >> token;
+
+        if (token == "v") {
+            double x, y, z;
+            iss >> x >> y >> z;
+            vertices.emplace_back(x, y, z);
+        }
+        else if (token == "f") {
+            int i1, i2, i3;
+            iss >> i1 >> i2 >> i3;
+            // OBJ is 1-based, so subtract 1
+            scene.add(make_shared<tri>(
+                vertices[i1 - 1],
+                vertices[i2 - 1],
+                vertices[i3 - 1],
+                mat
+            ));
+        }
+    }
 }

@@ -148,15 +148,43 @@ void tris() {
     cam.render(scene);
 }
 
+void load_obj() {
+    hittable_list scene;
+
+    auto material = make_shared<lambertian>(color(0.5, 0.1, 0.1));
+
+    load_obj_file("model.obj", scene, material);
+
+    auto material_right  = make_shared<metal>(color(0.8, 0.8, 0.8), 0.05);
+    scene.add(make_shared<sphere>(vector3( 2,    0.0, 0),   0.6, material_right));
+
+    scene = hittable_list(make_shared<bvh_node>(scene));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 10;
+    cam.vfov = 40;
+    cam.lookfrom = vector3(0,2,5);
+    cam.lookat   = vector3(0,0,0);
+    cam.vup      = vector3(0,1,0);
+
+    cam.render(scene);
+}
+
+
 int main() {
     Logger logger;
 
     logger.log("Rendering started.");
-    switch (4) {
+    switch (5) {
         case 1:  many_spheres();   break;
         case 2:  three_spheres();  break;
         case 3:  load_file();              break;
         case 4:  tris();     break;
+        case 5:  load_obj();     break;
     }
     logger.log("Rendering finished.");
 }
