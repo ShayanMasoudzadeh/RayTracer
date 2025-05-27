@@ -70,6 +70,8 @@ hittable_list load_scene_from_file(const std::string& filename) {
                 double fuzz;
                 iss >> fuzz;
                 mat = make_shared<metal>(color(r, g, b), fuzz);
+            } else if (mat_type == "light") {
+                mat = make_shared<diffuse_light>(color(r, g, b));
             } else {
                 std::cerr << "Unknown material type: " << mat_type << "\n";
                 continue;
@@ -91,6 +93,8 @@ hittable_list load_scene_from_file(const std::string& filename) {
                 double fuzz;
                 iss >> fuzz;
                 mat = make_shared<metal>(color(r, g, b), fuzz);
+            } else if (mat_type == "light") {
+                mat = make_shared<diffuse_light>(color(r, g, b));
             } else {
                 std::cerr << "Unknown material type: " << mat_type << "\n";
                 continue;
@@ -136,6 +140,10 @@ void set_camera(const std::string& filename, camera& cam) {
             double x, y, z;
             file >> x >> y >> z;
             cam.vup = vector3(x, y, z);
+        }else if (key == "background") {
+            double r, g, b;
+            file >> r >> g >> b;
+            cam.background = color(r, g, b);
         } else {
             std::cerr << "Unknown camera setting: " << key << "\n";
             std::string dummy;

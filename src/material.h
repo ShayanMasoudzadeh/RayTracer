@@ -9,6 +9,10 @@ class material {
 
     virtual ~material() = default;
 
+    virtual color emitted() const {
+        return color(0,0,0);
+    }
+
     virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const {
         return false;
     }
@@ -57,6 +61,18 @@ class metal : public material {
     private:
     color albedo;
     double fuzz;
+};
+
+class diffuse_light : public material {
+  public:
+    diffuse_light(const color& albedo) : albedo(albedo) {}
+
+    color emitted() const override {
+        return albedo;
+    }
+
+  private:
+    color albedo;
 };
 
 #endif
