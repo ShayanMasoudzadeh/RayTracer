@@ -153,7 +153,7 @@ void load_obj() {
 
     auto material = make_shared<lambertian>(color(0.5, 0.1, 0.1));
 
-    load_obj_file("model.obj", scene, material);
+    load_obj_file("obj/model.obj", scene, material);
 
     auto material_right  = make_shared<metal>(color(0.8, 0.8, 0.8), 0.05);
     scene.add(make_shared<sphere>(vector3( 2,    0.0, 0),   0.6, material_right));
@@ -177,42 +177,13 @@ void load_obj() {
 void custom_scene() {
     hittable_list scene;
 
-    auto black = make_shared<lambertian>(color(0, 0, 0));
-    auto black_glass = make_shared<metal>(color(0.5, 0.1, 0.1), 0.0);
-    auto body_silver = make_shared<metal>(color(0.5, 0.5, 0.5), 0.25);
-    auto glass = make_shared<metal>(color(0.3, 0.3, 0.3), 0.0);
-    auto gray_rims = make_shared<metal>(color(0.05, 0.05, 0.05), 0.5);
-    auto light_light_orange = make_shared<lambertian>(color(1.0, 0.144, 0.0));
-    auto light_orange = make_shared<lambertian>(color(1.0, 0.06, 0.0));
-    auto light_white = make_shared<lambertian>(color(1.0, 1.0, 1.0));
-    auto panel_dark = make_shared<metal>(color(0.6, 0.6, 0.6), 0.5);
-    auto panel_light = make_shared<metal>(color(0.8, 0.8, 0.8), 0.5);
-
-    load_obj_file("obj/tesla_black.obj", scene, black);
-    load_obj_file("obj/tesla_black_glass.obj", scene, black_glass);
-    load_obj_file("obj/tesla_body_silver.obj", scene, body_silver);
-    load_obj_file("obj/tesla_glass.obj", scene, glass);
-    load_obj_file("obj/tesla_gray_rims.obj", scene, gray_rims);
-    load_obj_file("obj/tesla_light_light_orange.obj", scene, light_light_orange);
-    load_obj_file("obj/tesla_light_orange.obj", scene, light_orange);
-    load_obj_file("obj/tesla_light_white.obj", scene, light_white);
-    load_obj_file("obj/tesla_panel_dark.obj", scene, panel_dark);
-    load_obj_file("obj/tesla_panel_light.obj", scene, panel_light);
-
+    scene = load_scene_from_file("custom_scene.txt");
     scene = hittable_list(make_shared<bvh_node>(scene));
 
     camera cam;
+    set_camera("camera_settings.txt", cam);
 
-    cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth = 10;
-    cam.vfov = 40;
-    cam.lookfrom = vector3(-10,4.5,5.75);
-    cam.lookat   = vector3(0,0,0);
-    cam.vup      = vector3(0,1,0);
-
-    cam.render(scene);
+    cam.render_parallel(scene);
 }
 
 int main() {
