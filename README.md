@@ -136,10 +136,8 @@ background         0.7 0.8 1.0
 switch (6) {
   case 1: many_spheres(); break;
   case 2: three_spheres(); break;
-  case 3: load_file(); break;
-  case 4: tris(); break;
-  case 5: load_obj(); break;
-  case 6: custom_scene(); break; // uses scene & camera files
+  case 3: tris(); break;
+  case 4: custom_scene(); break; // uses scene & camera files
 }
 ```
 
