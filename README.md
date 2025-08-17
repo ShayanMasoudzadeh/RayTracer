@@ -133,7 +133,7 @@ background         0.7 0.8 1.0
 `main.cpp` contains several scene functions and a `switch` to pick one:
 
 ```cpp
-switch (6) {
+switch (4) {
   case 1: many_spheres(); break;
   case 2: three_spheres(); break;
   case 3: tris(); break;
